@@ -1,11 +1,11 @@
 cmake_minimum_required(VERSION 3.9)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_LIST_DIR}/cmake/Modules")
 project(SOEM
-    DESCRIPTION "Simple Open EtherCAT Master"
-    VERSION 1.4.0
-    LANGUAGES C)
+  DESCRIPTION "Simple Open EtherCAT Master"
+  VERSION 1.4.0
+  LANGUAGES C)
 
-if (CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
   # Default to installing in SOEM source directory
   set(CMAKE_INSTALL_PREFIX ${CMAKE_CURRENT_LIST_DIR}/install)
 endif()
@@ -23,11 +23,13 @@ endif()
 if(WIN32)
   set(OS "win32")
   include_directories(oshw/win32/wpcap/Include)
+
   if(CMAKE_SIZEOF_VOID_P EQUAL 8)
     link_directories(${CMAKE_CURRENT_LIST_DIR}/oshw/win32/wpcap/Lib/x64)
   elseif(CMAKE_SIZEOF_VOID_P EQUAL 4)
     link_directories(${CMAKE_CURRENT_LIST_DIR}/oshw/win32/wpcap/Lib)
   endif()
+
   set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /D _CRT_SECURE_NO_WARNINGS")
   set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS}  /WX")
   set(OS_LIBS wpcap.lib Packet.lib Ws2_32.lib Winmm.lib)
@@ -91,7 +93,7 @@ target_include_directories(soem PUBLIC
 target_include_directories(soem
   PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/oshw/${OS}>
   $<INSTALL_INTERFACE:include/soem>
-  )
+)
 
 message(STATUS "LIB_DIR: ${SOEM_LIB_INSTALL_DIR}")
 
@@ -105,9 +107,10 @@ install(FILES
   ${OSHW_HEADERS}
   DESTINATION ${SOEM_INCLUDE_INSTALL_DIR})
 
-if(BUILD_TESTS) 
+if(BUILD_TESTS)
   add_subdirectory(test/simple_ng)
   add_subdirectory(test/linux/slaveinfo)
   add_subdirectory(test/linux/eepromtool)
   add_subdirectory(test/linux/simple_test)
+  add_subdirectory(test/linux/ncp_host)
 endif()
